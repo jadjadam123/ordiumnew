@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="logo.png">
+    <meta name="msapplication-TileColor" content="#011317">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- fonts -->
+    <link data-minify="1" rel="stylesheet" href="/wp-content/cache/min/1/dul1mrk.css?ver=1697032972">
+
+    <!-- script for preloader -->
+    <script src="/wp-content/themes/quantum/src/js/external/progressbar.min.js"></script>
+
+
+    <style>
+        html {
+            background-color: #011317;
+        }
+
+        body {
+            opacity: 0;
+            visibility: hidden;
+            overflow: hidden;
+        }
+
+        body.preloaded {
+            transition: opacity 600ms ease, visibility 600ms ease;
+            opacity: 1;
+            visibility: visible;
+        }
+        h2.center-titles {
+    text-align: center;
+    font-weight: bold;
+}
+
+        .document-wrap {
+            transition: opacity 600ms ease, visibility 600ms ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        body.loaded {
+            overflow: visible;
+        }
+
+        body.loaded .document-wrap {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        body.loaded .preloader-wrap {}
+
+        /* preloader wrap */
+
+        .preloader-wrap {
+            z-index: 600;
+            position: fixed;
+            display: flex;
+            align-items: center;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .preloader-wrap .big-quantum {
+            display: block;
+            pointer-events: none;
+            transform: translate(-50%, 0);
+            position: absolute; 
+            max-width: 17rem;
+            height: 3.3rem;
+            left: 50%;
+            bottom: 0.16rem;
+            overflow: hidden;
+            -webkit-mask-image: url("logobg.png");
+            mask-image: url("logobg.png");
+            mask-size: 100%;
+            -webkit-mask-size: 100%;
+        }
+
+        @media screen and (max-width: 768px) and (orientation: portrait) {
+            .preloader-wrap .big-quantum {
+                bottom: 0.08rem;
+            }
+        }
+
+        .preloader-wrap .big-quantum::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1rem;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            animation: shine 3s ease-in-out infinite;
+            filter: blur(0.5rem);
+        }
+
+        @media screen and (max-width: 768px) and (orientation: portrait) {
+            .preloader-wrap .big-quantum {
+                height: 0.9rem;
+            }
+            .preloader-wrap .big-quantum::after {
+                width: 1.5rem;
+                background-color: rgba(255, 255, 255, 1);
+            }
+            @keyframes shine {
+                0% {
+                    transform: translate(-1rem, 0) skew(-30deg);
+                }
+                100% {
+                    transform: translate(5rem, 0) skew(-30deg);
+                }
+            }
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translate(-2rem, 0) skew(-30deg);
+            }
+            100% {
+                transform: translate(16rem, 0) skew(-30deg);
+            }
+        }
+
+        .preloader-wrap .logo-title {
+            display: block;
+            width: 100%;
+        }
+
+        .preloader-wrap .container {
+            position: relative;
+            padding-top: 1rem;
+            width: 100%;
+            max-width: 1.5rem;
+            margin: auto;
+        }
+
+        .preloader-wrap .container .logo {
+            display: block;
+            width: 0.5rem;
+            margin: auto;
+            margin-bottom: 0.16rem;
+        }
+
+        .preloader-wrap .text {
+            font-family: neue-haas-grotesk-display, sans-serif;
+            font-size: 0.12rem;
+            color: #fff;
+            line-height: 1.6em;
+            text-transform: uppercase;
+            letter-spacing: 0.04rem;
+            min-height: 0.4rem;
+        }
+
+        .preloader-wrap .circle-wrap {
+            display: block;
+            position: absolute;
+            transform: translate(-50%, 0);
+            width: 0.8rem;
+            top: 0;
+            left: 50%;
+        }
+
+        .preloader-wrap .number {
+            display: block;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+            font-size: 0.24rem;
+            color: #d3b166;
+        }
+
+        .preloader-wrap .mouse-wrap {
+            pointer-events: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transform: translate(-50%, 0);
+            position: absolute;
+            top: -0.36rem;
+            left: 50%;
+            padding: 0.08rem;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            margin: auto;
+            opacity: 0;
+        }
+
+        .preloader-wrap .mouse-wrap:hover .button-wrap {
+            transform: scale(1.25);
+            transition: transform 400ms ease-out;
+        }
+
+        .preloader-wrap .button-wrap {
+            pointer-events: none;
+            display: block;
+            position: relative;
+            transition: transform 200ms ease-out;
+            border-radius: 50%;
+            padding: 0.08rem;
+            border: 1px solid #d3b166;
+            width: min-content;
+            aspect-ratio: 1 / 1;
+            margin: auto;
+        }
+
+        .preloader-wrap .button-wrap .btn {
+            display: block;
+            pointer-events: none;
+            width: 0.54rem;
+        }
+    </style>
+
+    <!-- preloader script -->
+    <script type="text/javascript">
+        window.addEventListener("DOMContentLoaded", function() {
+            const isMobile = window.innerWidth <= 768;
+
+            const container = document.querySelector(".preloader-wrap .container");
+            const bigQuantum = document.querySelector(".preloader-wrap .big-quantum");
+            const textSpan = document.querySelector(".preloader-wrap .text span");
+
+            const bqAnim = gsap.timeline({
+                paused: true
+            });
+            bqAnim.add("start");
+            bqAnim.from(bigQuantum, {
+                height: isMobile ? "0.6rem" : "2rem",
+                duration: 1.4,
+                ease: "power4.inOut",
+            }, "start");
+            bqAnim.to(container, {
+                y: "-30%",
+                duration: 1.4,
+                ease: "power4.inOut",
+            }, "start");
+            bqAnim.to(textSpan, {
+                opacity: 0,
+                duration: 1.4,
+                ease: "power4.inOut",
+                repeat: 1,
+                yoyo: true,
+                onRepeat: function() {
+                    textSpan.textContent = "Enter";
+                }
+            }, "start");
+
+
+
+            /* setup circle */
+            const circleWrap = document.querySelector(".preloader-wrap .circle-wrap");
+            const progress = new ProgressBar.Circle(circleWrap, {
+                strokeWidth: 2,
+                easing: 'easeIn',
+                color: '#B2883E',
+                trailColor: 'transparent',
+                trailWidth: 1,
+            });
+
+            /* count up */
+            const numberEl = document.querySelector(".preloader-wrap .number");
+
+            let loaded = false;
+            let currentPercentage = 0;
+            const limit = 71;
+            let countTimes = 5;
+
+            function count() {
+                let rnd;
+                if (currentPercentage >= 50 && currentPercentage < limit) {
+                    rnd = Math.floor(Math.random() * 2) + 1; // slow count 1-2
+                } else if (currentPercentage >= limit) {
+                    rnd = Math.random() * 1.5; // ultra slow count
+                } else {
+                    rnd = Math.floor(Math.random() * 8) + 1; // normal count 1-8
+                }
+
+                currentPercentage += parseInt(rnd);
+                if (currentPercentage >= 99) {
+                    currentPercentage = 99;
+                }
+                numberEl.textContent = `${currentPercentage}%`;
+                progress.animate(currentPercentage / 100, {
+                    duration: 100
+                });
+
+                if (loaded && countTimes <= 0) {
+                    numberEl.textContent = `${100}%`;
+                    progress.animate(1, {
+                        duration: 300
+                    });
+
+                    bqAnim.play();
+
+                    setTimeout(() => {
+                        loadHandle();
+                    }, 500);
+                    return;
+                } else {
+                    setTimeout(count, 200);
+                }
+
+                /* check for loaded */
+                if (window.loaded && window.loaded === true) {
+                    loaded = true;
+                }
+
+                countTimes--;
+            }
+
+            count();
+
+
+            /* button hover effect */
+            function initMouseMove() {
+                const buttonWrap = document.querySelector(".preloader-wrap .mouse-wrap");
+                const button = buttonWrap.querySelector(".btn");
+
+                const distance = buttonWrap.clientWidth * 0.15;
+                const normalize = (_val, _min, _max) => {
+                    return (_val - _min) / (_max - _min);
+                }
+
+                let normalizedX, normalizedY;
+                const moveControll = (e) => {
+                    const width = e.target.clientWidth;
+                    const height = e.target.clientHeight;
+
+                    const posX = e.offsetX;
+                    const posY = e.offsetY;
+
+                    const x = (width / 2) - posX;
+                    const y = (height / 2) - posY;
+
+                    normalizedX = distance * (-(normalize(x, 0, width / 2)));
+                    normalizedY = distance * (-(normalize(y, 0, height / 2)));
+
+                    gsap.to(button, {
+                        x: normalizedX,
+                        y: normalizedY,
+                        duration: 0.3,
+                        ease: 'none'
+                    });
+                };
+
+                buttonWrap.onmousemove = (e) => {
+                    moveControll(e);
+                };
+
+                buttonWrap.onmouseleave = () => {
+                    gsap.to(button, {
+                        x: 0,
+                        y: 0,
+                        duration: 0.6,
+                        ease: 'power4.out'
+                    });
+                };
+            }
+
+
+            /* loaded function */
+            function loadHandle() {
+                //console.log("Loaded!");
+
+                /* click expirience */
+                const preloader = document.querySelector(".preloader-wrap");
+                const circleWrap = document.querySelector(".preloader-wrap .circle-wrap");
+                const clickBtn = document.querySelector(".preloader-wrap .mouse-wrap");
+
+                gsap.to(circleWrap, {
+                    opacity: 0,
+                    scale: 0.75,
+                    pointerEvents: "none",
+                    ease: "expo.out",
+                    duration: 1
+                });
+                gsap.to(clickBtn, {
+                    opacity: 1,
+                    display: "flex",
+                    pointerEvents: "all",
+                    delay: 0.75,
+                    onComplete: function() {
+                        if (window.innerWidth >= 768) {
+                            initMouseMove();
+                        }
+                    }
+                });
+
+                clickBtn.addEventListener("click", () => {
+                    window.playClickSound();
+                    window.playAmbient();
+
+                    const timeline = gsap.timeline({
+                        onComplete: () => {
+                            document.body.classList.add("loaded");
+
+                            window.init3dIntro();
+                            window.siteBorderAnim.play();
+                        }
+                    });
+
+                    timeline.add("start");
+                    timeline.to(preloader, {
+                        opacity: 0,
+                        display: "none",
+                        pointerEvents: "none",
+                        duration: 0.5,
+                        ease: "expo.inOut",
+                    }, "start");
+                }, {
+                    once: true
+                });
+            }
+
+            document.body.classList.add("preloaded");
+        });
+    </script>
+
+    <script type="text/javascript">
+        let base_url = '/wp-content/themes/quantum/';
+    </script>
+
+    <script type="text/javascript">
+        var ADMIN_BAR_VISIBLE = false;
+        var admin_url = '/wp-admin/admin-ajax.php';
+    </script>
+
+    <meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+    
+    <link rel="alternate" hreflang="en" href="/" />
+    <link rel="alternate" hreflang="x-default" href="/" />
+
+    <!-- This site is optimized with the Yoast SEO plugin v21.9.1 - https://yoast.com/wordpress/plugins/seo/ -->
+    <title>Ordium </title>
+    <meta name="description" content="Discover the power within the BRC-20 ecosystem with Ordium. Unleash a suite of tools designed for seamless integration, propelling decentralized innovation to new heights." />
+    <link rel="canonical" href="/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Ordium  " />
+    <meta property="og:description" content="Discover the power within the BRC-20 ecosystem with Ordium. Unleash a suite of tools designed for seamless integration, propelling decentralized innovation to new heights." />
+    <meta property="og:url" content="/" />
+    <meta property="og:site_name" content="Quantum" />
+    <meta property="article:modified_time" content="2023-12-11T11:10:43+00:00" />
+    <meta property="og:image" content="logo.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="675" />
+    <meta property="og:image:type" content="image/png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" class="yoast-schema-graph">
+        {
+            "@context": "https://schema.org",
+            "@graph": [{
+                "@type": "WebPage",
+                "@id": "/",
+                "url": "/",
+                "name": "Ordium  ",
+                "isPartOf": {
+                    "@id": "/#website"
+                },
+                "datePublished": "2023-08-10T09:33:56+00:00",
+                "dateModified": "2023-12-11T11:10:43+00:00",
+                "description": "Discover the power within the BRC-20 ecosystem with Ordium. Unleash a suite of tools designed for seamless integration, propelling decentralized innovation to new heights.",
+                "breadcrumb": {
+                    "@id": "/#breadcrumb"
+                },
+                "inLanguage": "en-US",
+                "potentialAction": [{
+                    "@type": "ReadAction",
+                    "target": ["/"]
+                }]
+            }, {
+                "@type": "BreadcrumbList",
+                "@id": "/#breadcrumb",
+                "itemListElement": [{
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home"
+                }]
+            }, {
+                "@type": "WebSite",
+                "@id": "/#website",
+                "url": "/",
+                "name": "Ordium",
+                "description": "Revolution in Packaging Industry",
+                "potentialAction": [{
+                    "@type": "SearchAction",
+                    "target": {
+                        "@type": "EntryPoint",
+                        "urlTemplate": "/?s={search_term_string}"
+                    },
+                    "query-input": "required name=search_term_string"
+                }],
+                "inLanguage": "en-US"
+            }]
+        }
+    </script>
+    <!-- / Yoast SEO plugin. -->
+
+
+    <link rel="manifest" href="/pwa-manifest.json">
+    <link rel="apple-touch-icon" sizes="512x512" href="/wp-content/uploads/2023/10/quantum-app.jpg">
+    <link rel="apple-touch-icon-precomposed" sizes="192x192" href="/wp-content/uploads/2023/10/quantum-logo.png">
+    <link rel='dns-prefetch' href='//code.jquery.com' />
+
+    <style id='classic-theme-styles-inline-css'>
+        /*! This file is auto-generated */
+
+        .wp-block-button__link {
+            color: #fff;
+            background-color: #32373c;
+            border-radius: 9999px;
+            box-shadow: none;
+            text-decoration: none;
+            padding: calc(.667em + 2px) calc(1.333em + 2px);
+            font-size: 1.125em
+        }
+
+        .wp-block-file__button {
+            background: #32373c;
+            color: #fff;
+            text-decoration: none
+        }
+    </style>
+    <style id='global-styles-inline-css'>
+        body {
+            --wp--preset--color--black: #000000;
+            --wp--preset--color--cyan-bluish-gray: #abb8c3;
+            --wp--preset--color--white: #ffffff;
+            --wp--preset--color--pale-pink: #f78da7;
+            --wp--preset--color--vivid-red: #cf2e2e;
+            --wp--preset--color--luminous-vivid-orange: #ff6900;
+            --wp--preset--color--luminous-vivid-amber: #fcb900;
+            --wp--preset--color--light-green-cyan: #7bdcb5;
+            --wp--preset--color--vivid-green-cyan: #00d084;
+            --wp--preset--color--pale-cyan-blue: #8ed1fc;
+            --wp--preset--color--vivid-cyan-blue: #0693e3;
+            --wp--preset--color--vivid-purple: #9b51e0;
+            --wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg, rgba(6, 147, 227, 1) 0%, rgb(155, 81, 224) 100%);
+            --wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg, rgb(122, 220, 180) 0%, rgb(0, 208, 130) 100%);
+            --wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg, rgba(252, 185, 0, 1) 0%, rgba(255, 105, 0, 1) 100%);
+            --wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg, rgba(255, 105, 0, 1) 0%, rgb(207, 46, 46) 100%);
+            --wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg, rgb(238, 238, 238) 0%, rgb(169, 184, 195) 100%);
+            --wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg, rgb(74, 234, 220) 0%, rgb(151, 120, 209) 20%, rgb(207, 42, 186) 40%, rgb(238, 44, 130) 60%, rgb(251, 105, 98) 80%, rgb(254, 248, 76) 100%);
+            --wp--preset--gradient--blush-light-purple: linear-gradient(135deg, rgb(255, 206, 236) 0%, rgb(152, 150, 240) 100%);
+            --wp--preset--gradient--blush-bordeaux: linear-gradient(135deg, rgb(254, 205, 165) 0%, rgb(254, 45, 45) 50%, rgb(107, 0, 62) 100%);
+            --wp--preset--gradient--luminous-dusk: linear-gradient(135deg, rgb(255, 203, 112) 0%, rgb(199, 81, 192) 50%, rgb(65, 88, 208) 100%);
+            --wp--preset--gradient--pale-ocean: linear-gradient(135deg, rgb(255, 245, 203) 0%, rgb(182, 227, 212) 50%, rgb(51, 167, 181) 100%);
+            --wp--preset--gradient--electric-grass: linear-gradient(135deg, rgb(202, 248, 128) 0%, rgb(113, 206, 126) 100%);
+            --wp--preset--gradient--midnight: linear-gradient(135deg, rgb(2, 3, 129) 0%, rgb(40, 116, 252) 100%);
+            --wp--preset--font-size--small: 13px;
+            --wp--preset--font-size--medium: 20px;
+            --wp--preset--font-size--large: 36px;
+            --wp--preset--font-size--x-large: 42px;
+            --wp--preset--spacing--20: 0.44rem;
+            --wp--preset--spacing--30: 0.67rem;
+            --wp--preset--spacing--40: 1rem;
+            --wp--preset--spacing--50: 1.5rem;
+            --wp--preset--spacing--60: 2.25rem;
+            --wp--preset--spacing--70: 3.38rem;
+            --wp--preset--spacing--80: 5.06rem;
+            --wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);
+            --wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);
+            --wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);
+            --wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);
+            --wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);
+        }
+
+        :where(.is-layout-flex) {
+            gap: 0.5em;
+        }
+
+        :where(.is-layout-grid) {
+            gap: 0.5em;
+        }
+
+        body .is-layout-flow>.alignleft {
+            float: left;
+            margin-inline-start: 0;
+            margin-inline-end: 2em;
+        }
+
+        body .is-layout-flow>.alignright {
+            float: right;
+            margin-inline-start: 2em;
+            margin-inline-end: 0;
+        }
+
+        body .is-layout-flow>.aligncenter {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        body .is-layout-constrained>.alignleft {
+            float: left;
+            margin-inline-start: 0;
+            margin-inline-end: 2em;
+        }
+
+        body .is-layout-constrained>.alignright {
+            float: right;
+            margin-inline-start: 2em;
+            margin-inline-end: 0;
+        }
+
+        body .is-layout-constrained>.aligncenter {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        body .is-layout-constrained> :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+            max-width: var(--wp--style--global--content-size);
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        body .is-layout-constrained>.alignwide {
+            max-width: var(--wp--style--global--wide-size);
+        }
+
+        body .is-layout-flex {
+            display: flex;
+        }
+
+        body .is-layout-flex {
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        body .is-layout-flex>* {
+            margin: 0;
+        }
+
+        body .is-layout-grid {
+            display: grid;
+        }
+
+        body .is-layout-grid>* {
+            margin: 0;
+        }
+
+        :where(.wp-block-columns.is-layout-flex) {
+            gap: 2em;
+        }
+
+        :where(.wp-block-columns.is-layout-grid) {
+            gap: 2em;
+        }
+
+        :where(.wp-block-post-template.is-layout-flex) {
+            gap: 1.25em;
+        }
+
+        :where(.wp-block-post-template.is-layout-grid) {
+            gap: 1.25em;
+        }
+
+        .has-black-color {
+            color: var(--wp--preset--color--black) !important;
+        }
+
+        .has-cyan-bluish-gray-color {
+            color: var(--wp--preset--color--cyan-bluish-gray) !important;
+        }
+
+        .has-white-color {
+            color: var(--wp--preset--color--white) !important;
+        }
+
+        .has-pale-pink-color {
+            color: var(--wp--preset--color--pale-pink) !important;
+        }
+
+        .has-vivid-red-color {
+            color: var(--wp--preset--color--vivid-red) !important;
+        }
+
+        .has-luminous-vivid-orange-color {
+            color: var(--wp--preset--color--luminous-vivid-orange) !important;
+        }
+
+        .has-luminous-vivid-amber-color {
+            color: var(--wp--preset--color--luminous-vivid-amber) !important;
+        }
+
+        .has-light-green-cyan-color {
+            color: var(--wp--preset--color--light-green-cyan) !important;
+        }
+
+        .has-vivid-green-cyan-color {
+            color: var(--wp--preset--color--vivid-green-cyan) !important;
+        }
+
+        .has-pale-cyan-blue-color {
+            color: var(--wp--preset--color--pale-cyan-blue) !important;
+        }
+
+        .has-vivid-cyan-blue-color {
+            color: var(--wp--preset--color--vivid-cyan-blue) !important;
+        }
+
+        .has-vivid-purple-color {
+            color: var(--wp--preset--color--vivid-purple) !important;
+        }
+
+        .has-black-background-color {
+            background-color: var(--wp--preset--color--black) !important;
+        }
+
+        .has-cyan-bluish-gray-background-color {
+            background-color: var(--wp--preset--color--cyan-bluish-gray) !important;
+        }
+
+        .has-white-background-color {
+            background-color: var(--wp--preset--color--white) !important;
+        }
+
+        .has-pale-pink-background-color {
+            background-color: var(--wp--preset--color--pale-pink) !important;
+        }
+
+        .has-vivid-red-background-color {
+            background-color: var(--wp--preset--color--vivid-red) !important;
+        }
+
+        .has-luminous-vivid-orange-background-color {
+            background-color: var(--wp--preset--color--luminous-vivid-orange) !important;
+        }
+
+        .has-luminous-vivid-amber-background-color {
+            background-color: var(--wp--preset--color--luminous-vivid-amber) !important;
+        }
+
+        .has-light-green-cyan-background-color {
+            background-color: var(--wp--preset--color--light-green-cyan) !important;
+        }
+
+        .has-vivid-green-cyan-background-color {
+            background-color: var(--wp--preset--color--vivid-green-cyan) !important;
+        }
+
+        .has-pale-cyan-blue-background-color {
+            background-color: var(--wp--preset--color--pale-cyan-blue) !important;
+        }
+
+        .has-vivid-cyan-blue-background-color {
+            background-color: var(--wp--preset--color--vivid-cyan-blue) !important;
+        }
+
+        .has-vivid-purple-background-color {
+            background-color: var(--wp--preset--color--vivid-purple) !important;
+        }
+
+        .has-black-border-color {
+            border-color: var(--wp--preset--color--black) !important;
+        }
+
+        .has-cyan-bluish-gray-border-color {
+            border-color: var(--wp--preset--color--cyan-bluish-gray) !important;
+        }
+
+        .has-white-border-color {
+            border-color: var(--wp--preset--color--white) !important;
+        }
+
+        .has-pale-pink-border-color {
+            border-color: var(--wp--preset--color--pale-pink) !important;
+        }
+
+        .has-vivid-red-border-color {
+            border-color: var(--wp--preset--color--vivid-red) !important;
+        }
+
+        .has-luminous-vivid-orange-border-color {
+            border-color: var(--wp--preset--color--luminous-vivid-orange) !important;
+        }
+
+        .has-luminous-vivid-amber-border-color {
+            border-color: var(--wp--preset--color--luminous-vivid-amber) !important;
+        }
+
+        .has-light-green-cyan-border-color {
+            border-color: var(--wp--preset--color--light-green-cyan) !important;
+        }
+
+        .has-vivid-green-cyan-border-color {
+            border-color: var(--wp--preset--color--vivid-green-cyan) !important;
+        }
+
+        .has-pale-cyan-blue-border-color {
+            border-color: var(--wp--preset--color--pale-cyan-blue) !important;
+        }
+
+        .has-vivid-cyan-blue-border-color {
+            border-color: var(--wp--preset--color--vivid-cyan-blue) !important;
+        }
+
+        .has-vivid-purple-border-color {
+            border-color: var(--wp--preset--color--vivid-purple) !important;
+        }
+
+        .has-vivid-cyan-blue-to-vivid-purple-gradient-background {
+            background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;
+        }
+
+        .has-light-green-cyan-to-vivid-green-cyan-gradient-background {
+            background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;
+        }
+
+        .has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background {
+            background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;
+        }
+
+        .has-luminous-vivid-orange-to-vivid-red-gradient-background {
+            background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;
+        }
+
+        .has-very-light-gray-to-cyan-bluish-gray-gradient-background {
+            background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;
+        }
+
+        .has-cool-to-warm-spectrum-gradient-background {
+            background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;
+        }
+
+        .has-blush-light-purple-gradient-background {
+            background: var(--wp--preset--gradient--blush-light-purple) !important;
+        }
+
+        .has-blush-bordeaux-gradient-background {
+            background: var(--wp--preset--gradient--blush-bordeaux) !important;
+        }
+
+        .has-luminous-dusk-gradient-background {
+            background: var(--wp--preset--gradient--luminous-dusk) !important;
+        }
+
+        .has-pale-ocean-gradient-background {
+            background: var(--wp--preset--gradient--pale-ocean) !important;
+        }
+
+        .has-electric-grass-gradient-background {
+            background: var(--wp--preset--gradient--electric-grass) !important;
+        }
+
+        .has-midnight-gradient-background {
+            background: var(--wp--preset--gradient--midnight) !important;
+        }
+
+        .has-small-font-size {
+            font-size: var(--wp--preset--font-size--small) !important;
+        }
+
+        .has-medium-font-size {
+            font-size: var(--wp--preset--font-size--medium) !important;
+        }
+
+        .has-large-font-size {
+            font-size: var(--wp--preset--font-size--large) !important;
+        }
+
+        .has-x-large-font-size {
+            font-size: var(--wp--preset--font-size--x-large) !important;
+        }
+
+        .wp-block-navigation a:where(:not(.wp-element-button)) {
+            color: inherit;
+        }
+
+        :where(.wp-block-post-template.is-layout-flex) {
+            gap: 1.25em;
+        }
+
+        :where(.wp-block-post-template.is-layout-grid) {
+            gap: 1.25em;
+        }
+
+        :where(.wp-block-columns.is-layout-flex) {
+            gap: 2em;
+        }
+
+        :where(.wp-block-columns.is-layout-grid) {
+            gap: 2em;
+        }
+
+        .wp-block-pullquote {
+            font-size: 1.5em;
+            line-height: 1.6;
+        }
+    </style>
+    <link rel='stylesheet' id='redneck-style-css' href='/wp-content/themes/quantum/assets/css/style.min.css?ver=1.0.63' media='' />
+    <link rel='stylesheet' id='pwaforwp-style-css' href='/wp-content/plugins/pwa-for-wp/assets/css/pwaforwp-main.min.css?ver=1.7.66' media='all' />
+    <script id="wpml-cookie-js-extra">
+        var wpml_cookies = {
+            "wp-wpml_current_language": {
+                "value": "en",
+                "expires": 1,
+                "path": "\/"
+            }
+        };
+        var wpml_cookies = {
+            "wp-wpml_current_language": {
+                "value": "en",
+                "expires": 1,
+                "path": "\/"
+            }
+        };
+    </script>
+    <script data-minify="1" src="/wp-content/cache/min/1/wp-content/plugins/sitepress-multilingual-cms/res/js/cookies/language-cookie.js?ver=1697032972" id="wpml-cookie-js" defer data-wp-strategy="defer"></script>
+    <script id="wpml-xdomain-data-js-extra">
+        var wpml_xdomain_data = {
+            "css_selector": "wpml-ls-item",
+            "ajax_url": "https:\/\/quantumstretch.com\/wp-admin\/admin-ajax.php",
+            "current_lang": "en",
+            "_nonce": "33aa6b2a0a"
+        };
+    </script>
+    <script data-minify="1" src="/wp-content/cache/min/1/wp-content/plugins/sitepress-multilingual-cms/res/js/xdomain-data.js?ver=1697032972" id="wpml-xdomain-data-js" defer data-wp-strategy="defer"></script>
+    <link rel="https://api.w.org/" href="/wp-json/" />
+    <link rel="alternate" type="application/json" href="/wp-json/wp/v2/pages/12" />
+    <link rel="alternate" type="application/json+oembed" href="/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fquantumstretch.com%2F" />
+    <link rel="alternate" type="text/xml+oembed" href="/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fquantumstretch.com%2F&#038;format=xml" />
+    <meta name="generator" content="WPML ver:4.6.9 stt:22,1;" />
+    <meta name="pwaforwp" content="wordpress-plugin" />
+    <meta name="theme-color" content="rgb(1,19,23)">
+    <meta name="apple-mobile-web-app-title" content="ORDIUM">
+    <meta name="application-name" content="ORDIUM">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <link rel="apple-touch-icon" sizes="192x192" href="/wp-content/uploads/2023/10/quantum-logo.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="/wp-content/uploads/2023/10/quantum-app.jpg">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 844px) and (device-height: 390px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 926px) and (device-height: 428px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 852px) and (device-height: 393px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 932px) and (device-height: 430px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/wp-content/uploads/2023/10/quantum-app.jpg" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z5FXPXNLMS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-Z5FXPXNLMS', {
+            'anonymize_ip': true
+        });
+    </script>
+
+
+
+<style>
+    .site-logo:after,
+    .site-logo svg {
+        visibility: hidden;
+    }
+    .site-logo {
+        width: 50px !important;
+        height: 50px !important;
+        background: url(logo.png) no-repeat;
+        background-size: 100%;
+    }
+    .rowsocial {
+        display: flex;
+        justify-content: center;
+        
+    }
+    .rowsocial img {
+    width: 58px;
+    padding: 7px;
+}
+    </style>
+</head>
+
+<body class="home page-template page-template-tpl-home page-template-tpl-home-php page page-id-12 singular">
+
+    <!-- preloader -->
+    <div class="preloader-wrap">
+        <div class="container">
+            <div class="circle-wrap">
+                <div class="number fw-500">0%</div>
+            </div>
+
+            <div class="text fw-500"><span>LOADING ORDIUM</span></div>
+
+            <div class="mouse-wrap">
+                <div class="button-wrap">
+                    <svg class="btn" viewBox="0 0 55 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0.5" width="54" height="54" rx="27" fill="#D3B166"/>
+                        <path d="M22.5 32L32.5 22M32.5 22H22.5M32.5 22V32" stroke="#020F13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- big Ordium  wrap -->
+        <div class="big-quantum">
+            <img src="logobg.png"/>
+        </div>
+    </div>
+
+    <div class="document-wrap">
+        <!-- site border -->
+        <div class="site-border" data-method="siteBorderAnim">
+            <div class="site-logo">
+                <svg class="icon" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M40.5 31.6084V40H20.4303C20.2436 40 20.0582 39.9972 19.8728 39.9916C9.123 39.6965 0.5 30.8587 0.5 20C0.5 9.14126 9.42265 0 20.4303 0C31.438 0 40.3606 8.95385 40.3606 20C40.3606 22.9972 39.7028 25.8392 38.5265 28.3916H28.4108C30.6185 26.2769 31.9983 23.2979 31.9983 20C31.9983 13.5986 26.8094 8.39161 20.4303 8.39161C14.0512 8.39161 8.86237 13.5986 8.86237 20C8.86237 26.4014 13.976 31.5287 20.2909 31.6042V31.6084H40.5Z" fill="url(#paint1_linear_834_516)"/>
+                    <defs>
+                        <linearGradient id="paint1_linear_834_516" x1="10.5561" y1="5.80756" x2="24.5442" y2="38.4678" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#B2883E"/>
+                            <stop offset="0.132936" stop-color="#E0B54D"/>
+                            <stop offset="0.186698" stop-color="#ECD799"/>
+                            <stop offset="0.325922" stop-color="#AB8C40"/>
+                            <stop offset="0.558973" stop-color="#E0B54D"/>
+                            <stop offset="0.682701" stop-color="#C29743"/>
+                            <stop offset="1" stop-color="#FEF2BD"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+
+            <div class="sound-button-container" data-method="magneticButton">
+                <a href="#" class="global-sound-button btn">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </a>
+            </div>
+
+            <div class="top-right">
+                <div class="anchors" data-method="sectionAnchors">
+                    <a href="#performanceAnchor" class="link block anchor" data-text="About"><span>About</span></a>
+                    <a href="#specificationAnchor" class="link block anchor" data-text="Tools"><span>Tools</span></a>
+                    <a href="#technologyAnchor" class="link block anchor" data-text="Roadmap"><span>Roadmap</span></a> 
+                    <a href="#contactAnchor" class="link block anchor" data-text="Socials"><span>Socials</span></a>
+               </div>
+          
+            </div>
+
+
+
+            <div class="bottom-left">
+                <!-- sound experience -->
+                <div class="sound-experience">
+                    <div class="text fw-500">
+                        <div class="icon"></div>
+                        Enjoy this experience better by using your headphones or turning on your speakers </div>
+                </div>
+
+
+
+                <!-- switch navigation -->
+                <div class="switch-navigation">
+                    <!-- dot frame -->
+                    <div class="dot-frame-wrap">
+                        <div class="dot-frame">
+                            <div class="icon-wrap playable">
+                                <svg class="icon" viewBox="0 0 26 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 1C8.21053 1 13.2281 8 13.2281 8C13.2281 8 17.7895 1 26 1" stroke="#ECFFFF" stroke-width="2" stroke-dasharray="1.13 0.57"/>
+                                </svg>
+                                <svg class="play-icon" viewBox="0 0 15 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 2.12037C0 1.14921 0 0.663626 0.20249 0.395955C0.378894 0.162766 0.648522 0.0184654 0.940398 0.00103806C1.27544 -0.0189663 1.67946 0.250386 2.48752 0.78909L13.0031 7.79946C13.6708 8.24459 14.0046 8.46715 14.1209 8.74767C14.2227 8.99293 14.2227 9.26856 14.1209 9.51381C14.0046 9.79434 13.6708 10.0169 13.0031 10.462L2.48752 17.4724C1.67946 18.0111 1.27544 18.2805 0.940398 18.2604C0.648522 18.243 0.378894 18.0987 0.20249 17.8655C0 17.5979 0 17.1123 0 16.1411V2.12037Z" fill="#D3B166"/>
+                                </svg>
+                                <svg class="pause-icon" viewBox="0 0 12 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 8.74229e-08C3.60457 3.91406e-08 4.5 0.89543 4.5 2L4.5 17C4.5 18.1046 3.60457 19 2.5 19C1.39543 19 0.500001 18.1046 0.500001 17L0.5 2C0.5 0.895431 1.39543 1.35705e-07 2.5 8.74229e-08Z" fill="#D3B166"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 8.74229e-08C10.6046 3.91406e-08 11.5 0.89543 11.5 2L11.5 17C11.5 18.1046 10.6046 19 9.5 19C8.39543 19 7.5 18.1046 7.5 17L7.5 2C7.5 0.895431 8.39543 1.35705e-07 9.5 8.74229e-08Z" fill="#D3B166"/>
+                                </svg>
+                            </div>
+
+                            <div class="wave-wrap">
+                                <!-- texts -->
+                                <div class="ww-inner">
+                                    <div class="w-title fw-500">Puncture resistance</div>
+                                </div>
+                                <!-- wave -->
+                                <div class="wave">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- dot frame -->
+                    <div class="dot-frame-wrap">
+                        <div class="dot-frame">
+                            <div class="icon-wrap">
+                                <svg class="icon plane" viewBox="0 0 22 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 1C0 1 3.85965 1 11.193 1C18.5263 1 22 1 22 1" stroke="#ECFFFF" stroke-width="2" stroke-dasharray="1 0.5"/>
+                                </svg>
+                                <svg class="play-icon" viewBox="0 0 15 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 2.12037C0 1.14921 0 0.663626 0.20249 0.395955C0.378894 0.162766 0.648522 0.0184654 0.940398 0.00103806C1.27544 -0.0189663 1.67946 0.250386 2.48752 0.78909L13.0031 7.79946C13.6708 8.24459 14.0046 8.46715 14.1209 8.74767C14.2227 8.99293 14.2227 9.26856 14.1209 9.51381C14.0046 9.79434 13.6708 10.0169 13.0031 10.462L2.48752 17.4724C1.67946 18.0111 1.27544 18.2805 0.940398 18.2604C0.648522 18.243 0.378894 18.0987 0.20249 17.8655C0 17.5979 0 17.1123 0 16.1411V2.12037Z" fill="#D3B166"/>
+                                </svg>
+                                <svg class="pause-icon" viewBox="0 0 12 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 8.74229e-08C3.60457 3.91406e-08 4.5 0.89543 4.5 2L4.5 17C4.5 18.1046 3.60457 19 2.5 19C1.39543 19 0.500001 18.1046 0.500001 17L0.5 2C0.5 0.895431 1.39543 1.35705e-07 2.5 8.74229e-08Z" fill="#D3B166"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 8.74229e-08C10.6046 3.91406e-08 11.5 0.89543 11.5 2L11.5 17C11.5 18.1046 10.6046 19 9.5 19C8.39543 19 7.5 18.1046 7.5 17L7.5 2C7.5 0.895431 8.39543 1.35705e-07 9.5 8.74229e-08Z" fill="#D3B166"/>
+                                </svg>
+                            </div>
+
+                            <div class="wave-wrap">
+                                <!-- texts -->
+                                <div class="ww-inner">
+                                    <div class="w-title fw-500">Stretch up</div>
+                                </div>
+                                <!-- wave -->
+                                <div class="wave">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- dot frame -->
+                    <div class="dot-frame-wrap">
+                        <div class="dot-frame">
+                            <div class="icon-wrap">
+                                <svg class="icon sphere" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="1" y="1" width="20" height="20" rx="9" stroke="#ECFFFF" stroke-width="2" stroke-dasharray="1 0.5"/>
+                                </svg>
+                                <svg class="play-icon" viewBox="0 0 15 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 2.12037C0 1.14921 0 0.663626 0.20249 0.395955C0.378894 0.162766 0.648522 0.0184654 0.940398 0.00103806C1.27544 -0.0189663 1.67946 0.250386 2.48752 0.78909L13.0031 7.79946C13.6708 8.24459 14.0046 8.46715 14.1209 8.74767C14.2227 8.99293 14.2227 9.26856 14.1209 9.51381C14.0046 9.79434 13.6708 10.0169 13.0031 10.462L2.48752 17.4724C1.67946 18.0111 1.27544 18.2805 0.940398 18.2604C0.648522 18.243 0.378894 18.0987 0.20249 17.8655C0 17.5979 0 17.1123 0 16.1411V2.12037Z" fill="#D3B166"/>
+                                </svg>
+                                <svg class="pause-icon" viewBox="0 0 12 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 8.74229e-08C3.60457 3.91406e-08 4.5 0.89543 4.5 2L4.5 17C4.5 18.1046 3.60457 19 2.5 19C1.39543 19 0.500001 18.1046 0.500001 17L0.5 2C0.5 0.895431 1.39543 1.35705e-07 2.5 8.74229e-08Z" fill="#D3B166"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 8.74229e-08C10.6046 3.91406e-08 11.5 0.89543 11.5 2L11.5 17C11.5 18.1046 10.6046 19 9.5 19C8.39543 19 7.5 18.1046 7.5 17L7.5 2C7.5 0.895431 8.39543 1.35705e-07 9.5 8.74229e-08Z" fill="#D3B166"/>
+                                </svg>
+                            </div>
+
+                            <div class="wave-wrap">
+                                <!-- texts -->
+                                <div class="ww-inner">
+                                    <div class="w-title fw-500">Cling increase</div>
+                                </div>
+                                <!-- wave -->
+                                <div class="wave">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- dot frame -->
+                    <div class="dot-frame-wrap">
+                        <div class="dot-frame">
+                            <div class="icon-wrap">
+                                <svg class="icon cube" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="1" y="1" width="16" height="16" stroke="#ECFFFF" stroke-width="2" stroke-dasharray="1 0.5"/>
+                                </svg>
+                                <svg class="play-icon" viewBox="0 0 15 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 2.12037C0 1.14921 0 0.663626 0.20249 0.395955C0.378894 0.162766 0.648522 0.0184654 0.940398 0.00103806C1.27544 -0.0189663 1.67946 0.250386 2.48752 0.78909L13.0031 7.79946C13.6708 8.24459 14.0046 8.46715 14.1209 8.74767C14.2227 8.99293 14.2227 9.26856 14.1209 9.51381C14.0046 9.79434 13.6708 10.0169 13.0031 10.462L2.48752 17.4724C1.67946 18.0111 1.27544 18.2805 0.940398 18.2604C0.648522 18.243 0.378894 18.0987 0.20249 17.8655C0 17.5979 0 17.1123 0 16.1411V2.12037Z" fill="#D3B166"/>
+                                </svg>
+                                <svg class="pause-icon" viewBox="0 0 12 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 8.74229e-08C3.60457 3.91406e-08 4.5 0.89543 4.5 2L4.5 17C4.5 18.1046 3.60457 19 2.5 19C1.39543 19 0.500001 18.1046 0.500001 17L0.5 2C0.5 0.895431 1.39543 1.35705e-07 2.5 8.74229e-08Z" fill="#D3B166"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 8.74229e-08C10.6046 3.91406e-08 11.5 0.89543 11.5 2L11.5 17C11.5 18.1046 10.6046 19 9.5 19C8.39543 19 7.5 18.1046 7.5 17L7.5 2C7.5 0.895431 8.39543 1.35705e-07 9.5 8.74229e-08Z" fill="#D3B166"/>
+                                </svg>
+                            </div>
+
+                            <div class="wave-wrap">
+                                <!-- texts -->
+                                <div class="ww-inner">
+                                    <div class="w-title fw-500">Retention</div>
+                                </div>
+                                <!-- wave -->
+                                <div class="wave">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="subtitle-wrap">
+                <div class="subtitle-frame" data-stagger-speed="0.42" data-audio-url="/wp-content/uploads/2023/09/puncture-1.mp3">
+                    <div class="subtitle fw-500">
+                        Introducing Ordium Scanner – Your Gateway to Comprehensive Token Analysis in the daunting BRC20 world. Dive into the world of BRC-20 tokens with confidence, as our advanced token scanner meticulously examines and decodes the intricacies of various tokens. Uncover valuable insights, assess risks, and make informed decisions in the ever-evolving blockchain landscape. Empower your crypto journey with Ordium Scanner  – Where Precision Meets Possibilities.</div>
+                </div>
+                <div class="subtitle-frame" data-stagger-speed="0.36" data-audio-url="/wp-content/uploads/2023/09/stretching-1.mp3">
+                    <div class="subtitle fw-500">
+                        Step into the dynamic realm of decentralized finance with Ordium Live Pairs – your real-time gateway to the ever-evolving crypto landscape. Witness the excitement unfold as our cutting-edge Memepool Scanner navigates through live token pairs, providing instant insights into emerging opportunities. Stay ahead of the crypto curve and empower your trading strategies with Ordium Live Pairs – Where Every Moment Counts in the World of Decentralized Possibilities.
+                    </div>
+                </div>
+                <div class="subtitle-frame" data-stagger-speed="0.36" data-audio-url="/wp-content/uploads/2023/09/cling-1.mp3">
+                    <div class="subtitle fw-500">
+                        Enter the world of Ordium Wallet Creation, where convenience meets security on Telegram. Empower your crypto experience with our specialized Wallet Creation Bot, tailored exclusively for Telegram users. Craft personalized and secure digital wallets effortlessly within the familiar confines of your Telegram chat. Ordium Wallet Creation simplifies the process, ensuring a seamless journey into the world of digital assets. Elevate your Telegram experience with Ordium Wallet Creation – Where Security and Simplicity Converge</div>
+                </div>
+                <div class="subtitle-frame" data-stagger-speed="0.34" data-audio-url="/wp-content/uploads/2023/09/retention-2.mp3">
+                    <div class="subtitle fw-500">
+                        Step into the realm of Ordium Swap, where your exploration of BRC-20 tokens becomes effortless. Just select your preferred token, specify your ETH investment, and indicate your desired delivery destination on the Bitcoin network.
+Our intelligent system scans various decentralized exchanges (DEXs) for optimal prices, smoothly transitioning your ETH to Bitcoin, and securing your tokens. We manage the intricate details behind the scenes without sacrificing your control. Relax and relish the streamlined experience of investing in BRC-20 tokens directly from your Ethereum, courtesy of Ordium Swap.</div>
+                </div>
+                <div class="subtitle-frame" data-stagger-speed="0.43" data-audio-url="/wp-content/uploads/2023/09/retention-2.mp3.mp3">
+                    <div class="subtitle fw-500">
+                        Embark on a revolutionary journey with Ordium Sniper, the groundbreaking BRC-20 sniper tool we are crafting for strategic dominance in the crypto landscape. As we meticulously develop this cutting-edge solution, our focus is on precision, enabling users to effortlessly navigate and capitalize on optimal BRC-20 token opportunities.
+Ordium Sniper leverages state-of-the-art algorithms, honing in on promising token trades across decentralized exchanges (DEXs). With our dedication to innovation, we are creating a tool that seamlessly executes transactions, ensuring users stay at the forefront of the market. Join us in shaping the future of crypto with Ordium Sniper – Crafting Precision for Profit in the BRC-20 Realm.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- webgl scene -->
+        <div class="three-background"></div>
+
+
+        <!-- page content -->
+        <div id="smooth-wrapper">
+            <div id="smooth-content">
+                <!-- Header -->
+                <header class="header"></header>
+                <!-- camera timeline track -->
+                <div class="camera-track" data-method="three">
+                    <!-- home hero section -->
+
+
+                    <section class="home-hero-section block relative">
+                        <div class="aligner">
+                            <div class="container">
+                                <h1 class="title fw-400 switch-trigger intro-title" data-stagger-speed="0.45" data-audio-url="/wp-content/uploads/2023/09/intro.mp3">
+                                   WELCOME TO ORDIUM</h1>
+                            </div>
+                        </div>
+                    </section>
+
+
+                    <!-- strong film section -->
+                    <section class="strong-film-section block relative">
+                        <div class="container">
+                            <h2 id="performanceAnchor" class="title fw-400 switch-trigger" data-scrub-title-reveal>
+                                About </h2>
+
+                            <h4 class="subtitle fw-400" data-scrub-title-reveal>
+                               Fueling BRC-20 Excellence: </h4>
+
+                            <div class="texts-frame" data-stagger-reveal>
+                                <div class="text " data-stagger-piece>
+                                    Discover the power within the BRC-20 ecosystem with Ordium. Unleash a suite of tools designed for seamless integration, propelling decentralized innovation to new heights. </div>
+
+                                <div class="text fw-500" data-stagger-piece>
+                                    Navigating the expansive BRC-20 ecosystem, even for avid crypto enthusiasts, can be overwhelming. Our commitment is to revolutionize this journey by building a secure and user-friendly platform under the banner of Ordium.</div>
+                            </div>
+                        </div>
+
+
+                        <!-- stats frame -->
+                        
+                    </section>
+
+                    <!-- new technology section -->
+                 
+
+
+
+                    <!-- switch section -->
+                    <section id="specificationAnchor" class="switch-section puncture block relative">
+                        <div class="aligner">
+                            <!-- panel -->
+                            <div class="panel">
+                                <div class="container">
+                                    <div class="title-wrap">
+                                        <h4 class="title fw-400 switch-trigger">Ordium Token Scanner </h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- panel -->
+                            <div class="panel">
+                                <div class="container">
+                                    <h4 class="title fw-400 switch-trigger">Ordium Live Pairs:</h4>
+                                </div>
+                            </div>
+
+                            <!-- panel -->
+                            <div class="panel">
+                                <div class="container">
+                                    <h4 class="title fw-400 switch-trigger">Ordium Wallet Creation:</h4>
+                                </div>
+                            </div>
+
+                            <!-- panel -->
+                            <div class="panel">
+                                <div class="container">
+                                    <h4 class="title fw-400 switch-trigger">Ordium Swap: </h4>
+                                </div>
+                            </div>
+
+                            <div class="panel">
+                                <div class="container">
+                                    <h4 class="title fw-400 switch-trigger">Ordium Sniper:</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                    <section class="new-technology-section block relative">
+                        <h4 id="technologyAnchor" class="title fw-400 switch-trigger" data-scrub-title-reveal>ROADMAP </h4>
+
+
+                        <!-- flying cards -->
+                        <div class="flying-cards relative" data-stagger-reveal>
+
+                            <!-- card -->
+                            <div class="card" data-stagger-piece>
+                                <div class="c-head">
+                                    <div class="c-title fw-400">Launch Ordium $ORDM token:</div>
+                                </div>
+
+                                <div class="c-body">
+                                    <div class="c-text fw-500">
+                                        A covert token launch propels development forward, vibrant social media engagement sparks community enthusiasm, while locked liquidity and robust foundations establish a bedrock of trust.</div>
+                                </div>
+                            </div>
+                            <!-- card -->
+                            <div class="card" data-stagger-piece>
+                                <div class="c-head">
+                                    <div class="c-title fw-400">Unleashing Ordium Token Scanner: </div>
+                                </div>
+
+                                <div class="c-body">
+                                    <div class="c-text fw-500">
+                                        Unlock BRC-20 insights with Ordium Scanner – where precision meets crypto possibilities.</div>
+                                </div>
+                            </div>
+                            <!-- card -->
+                            <div class="card" data-stagger-piece>
+                                <div class="c-head">
+                                    <div class="c-title fw-400">The ecosystem begins:  </div>
+                                </div>
+
+                                <div class="c-body">
+                                    <div class="c-text fw-500">
+                                        Ordium Swap will be released and we slowly trickle out the rest of our ecosystem. Establishing a vibrant BRC-20 marketplace, empower users with cutting-edge tools, let community governance shape the future, and explore interoperability for limitless DeFi possibilities. </div>
+                                </div>
+                            </div>
+                            <!-- card -->
+                            <div class="card" data-stagger-piece>
+                                <div class="c-head">
+                                    <div class="c-title fw-400">The future begins: </div>
+                                </div>
+
+                                <div class="c-body">
+                                    <div class="c-text fw-500">
+                                           
+                                    
+                                    
+                                    
+                                    </div>
+                            </div>
+                          
+
+                        </div>
+                    </section>
+
+
+
+                    <section class="strong-film-section block relative">
+                        
+                        <div class="container">
+                            <h2 id="performanceAnchor" class="title fw-400 switch-trigger" data-scrub-title-reveal>
+                                TOKENOMICS </h2>
+
+                            <h4 class="subtitle fw-400" data-scrub-title-reveal>
+                               CA: 0x0000000000000000000000000000000</h4> 
+                        </div>
+
+                        <!-- stats frame -->
+                        <div class="stats-frame" data-stagger-reveal>
+                           
+                            <div class="sf-inner">
+                                <div class="stat-card" data-stagger-piece>
+                                    <div class="circle-frame" data-method="initCircle" data-value="1">
+                                        <div class="circle"></div>
+
+                                        <div class="number">1000000</div>
+                                        <div class="line"></div>
+                                    </div>
+
+                                    <div class="card-title fw-500">
+                                        <h2 class="center-titles" >1 MILLION SUPPLY</h2></div>
+                                   
+                                </div>
+                            </div>
+                            <div class="sf-inner">
+                                <div class="stat-card" data-stagger-piece>
+                                    <div class="circle-frame" data-method="initCircle" data-value="0.05">
+                                        <div class="circle"></div>
+
+                                        <div class="number">5%</div>
+                                        <div class="line"></div>
+                                    </div>
+
+                                    <div class="card-title fw-500">
+                                        <h2 class="center-titles" >SELL TAX</h2></div>
+                                   
+                                </div>
+                            </div>
+                            <div class="sf-inner">
+                                <div class="stat-card" data-stagger-piece>
+                                    <div class="circle-frame" data-method="initCircle" data-value="0.05">
+                                        <div class="circle"></div>
+
+                                        <div class="number">5%</div>
+                                        <div class="line"></div>
+                                    </div>
+
+                                    <div class="card-title fw-500">
+                                        <h2 class="center-titles" >BUY TAX</h2> </div>
+                                   
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+                    <!-- cylinders-camera-track -->
+                    <div class="cylinders-camera-track">
+                        <!-- pdf section -->
+                        <section class="pdf-section block relative">
+                            <div class="track">
+                                <div class="aligner">
+                                    <div class="container">
+                                        <a href="#" class="panel anchor" target="_blank">
+                                            <div class="label fw-500">Join Our</div>
+
+                                            <h4 class="title fw-400">
+                                                TELEGRAM </h4>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+
+
+                        <!-- contact section -->
+                        <section class="contact-section block relative">
+                            <div class="aligner">
+                                <div class="container">
+
+                                    <div class="rowsocial">
+
+                                        <div class="tele">
+                                            <a href="#" target="_blank">
+                                            <img src="tele.png">
+                                            </a>
+                                        </div>
+
+                                        <div class="xlog">
+                                            <a href="#" target="_blank">
+                                             <img src="x.png">
+                                            </a>
+                                        </div>
+                                        <div class="xlog">
+                                            <a href="#" target="_blank">
+                                             <img src="github.png">
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                    <!-- title wrap -->
+                                    <div id="contactAnchor" class="title-wrap" style="display: none;">
+                                        <h4 class="title fw-400">Contact</h4>
+
+                                        <div class="subtitle fw-500">
+                                            Don&#039;t miss the opportunity to elevate your packaging process with Ordium film. Fill out the contact form and discover how we can meet your specific needs! </div>
+                                    </div>
+
+                                    <!-- form -->
+                                    <div class="form" data-method="sendContactForm" style="display: none;">
+                                        <form autocomplete="off" action="POST" id="contact-section-form" class="contact-section-form-content block relative">
+                                            <div class="contact-form-row">
+                                                <div class="form-row-left-column">
+                                                    <div class="form-field form-field-validate">
+                                                        <label for="your-name">Name</label>
+                                                        <input class="input-for-form-field required-field" type="text" id="your-name" name="your-name" placeholder="Your name" autocomplete="off">
+                                                    </div>
+                                                    <div class="form-field form-field-validate">
+                                                        <label for="your-organization">Organization</label>
+                                                        <input class="input-for-form-field" type="text" id="your-organization" name="your-organization" placeholder="Your Organization" autocomplete="off">
+                                                    </div>
+                                                    <div class="form-field form-field-validate">
+                                                        <label for="your-email-address">E-mail Address</label>
+                                                        <input class="input-for-form-field required-field" type="email" id="your-email-address" name="your-email-address" placeholder="E-mail Address" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <div class="form-row-right-column">
+                                                    <div class="form-field form-field-validate">
+                                                        <label for="your-message">Message</label>
+                                                        <textarea class="input-for-form-field required-field" name="your-message" id="your-message" placeholder="Your Message" cols="30" rows="4" autocomplete="off"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row-left-column thank-you-message-column">
+                                                    <p>Success! Your message has been sent</p>
+                                                </div>
+                                                <div class="form-row-right-column">
+                                                    <div class="form-field submit-field">
+                                                        <button type="submit" class="submit-button">
+                                            <span>Send</span>
+                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- footer -->
+                        <footer class="footer" data-method="goTopControl">
+                            <div class="container">
+                                <!-- logo -->
+                                <div class="logo-frame">
+                                    <img src="/wp-content/themes/quantum/assets/img/svg/logo.png" alt="Ordium logo" class="logo">
+                                </div>
+
+                                <!-- claim -->
+                                <div class="claim fw-500">
+                                    All rights reserved © ORDIUM </div>
+                            </div>
+
+                            <a href="#" class="go-top-anchor"></a>
+                        </footer>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <script id="rocket-browser-checker-js-after">
+        "use strict";
+        var _createClass = function() {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor)
+                }
+            }
+            return function(Constructor, protoProps, staticProps) {
+                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), Constructor
+            }
+        }();
+
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function")
+        }
+        var RocketBrowserCompatibilityChecker = function() {
+            function RocketBrowserCompatibilityChecker(options) {
+                _classCallCheck(this, RocketBrowserCompatibilityChecker), this.passiveSupported = !1, this._checkPassiveOption(this), this.options = !!this.passiveSupported && options
+            }
+            return _createClass(RocketBrowserCompatibilityChecker, [{
+                key: "_checkPassiveOption",
+                value: function(self) {
+                    try {
+                        var options = {
+                            get passive() {
+                                return !(self.passiveSupported = !0)
+                            }
+                        };
+                        window.addEventListener("test", null, options), window.removeEventListener("test", null, options)
+                    } catch (err) {
+                        self.passiveSupported = !1
+                    }
+                }
+            }, {
+                key: "initRequestIdleCallback",
+                value: function() {
+                    !1 in window && (window.requestIdleCallback = function(cb) {
+                        var start = Date.now();
+                        return setTimeout(function() {
+                            cb({
+                                didTimeout: !1,
+                                timeRemaining: function() {
+                                    return Math.max(0, 50 - (Date.now() - start))
+                                }
+                            })
+                        }, 1)
+                    }), !1 in window && (window.cancelIdleCallback = function(id) {
+                        return clearTimeout(id)
+                    })
+                }
+            }, {
+                key: "isDataSaverModeOn",
+                value: function() {
+                    return "connection" in navigator && !0 === navigator.connection.saveData
+                }
+            }, {
+                key: "supportsLinkPrefetch",
+                value: function() {
+                    var elem = document.createElement("link");
+                    return elem.relList && elem.relList.supports && elem.relList.supports("prefetch") && window.IntersectionObserver && "isIntersecting" in IntersectionObserverEntry.prototype
+                }
+            }, {
+                key: "isSlowConnection",
+                value: function() {
+                    return "connection" in navigator && "effectiveType" in navigator.connection && ("2g" === navigator.connection.effectiveType || "slow-2g" === navigator.connection.effectiveType)
+                }
+            }]), RocketBrowserCompatibilityChecker
+        }();
+    </script>
+     
+    <script id="rocket-preload-links-js-after">
+        (function() {
+            "use strict";
+            var r = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(e) {
+                    return typeof e
+                } : function(e) {
+                    return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e
+                },
+                e = function() {
+                    function i(e, t) {
+                        for (var n = 0; n < t.length; n++) {
+                            var i = t[n];
+                            i.enumerable = i.enumerable || !1, i.configurable = !0, "value" in i && (i.writable = !0), Object.defineProperty(e, i.key, i)
+                        }
+                    }
+                    return function(e, t, n) {
+                        return t && i(e.prototype, t), n && i(e, n), e
+                    }
+                }();
+
+            function i(e, t) {
+                if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function")
+            }
+            var t = function() {
+                function n(e, t) {
+                    i(this, n), this.browser = e, this.config = t, this.options = this.browser.options, this.prefetched = new Set, this.eventTime = null, this.threshold = 1111, this.numOnHover = 0
+                }
+                return e(n, [{
+                    key: "init",
+                    value: function() {
+                        !this.browser.supportsLinkPrefetch() || this.browser.isDataSaverModeOn() || this.browser.isSlowConnection() || (this.regex = {
+                            excludeUris: RegExp(this.config.excludeUris, "i"),
+                            images: RegExp(".(" + this.config.imageExt + ")$", "i"),
+                            fileExt: RegExp(".(" + this.config.fileExt + ")$", "i")
+                        }, this._initListeners(this))
+                    }
+                }, {
+                    key: "_initListeners",
+                    value: function(e) {
+                        -1 < this.config.onHoverDelay && document.addEventListener("mouseover", e.listener.bind(e), e.listenerOptions), document.addEventListener("mousedown", e.listener.bind(e), e.listenerOptions), document.addEventListener("touchstart", e.listener.bind(e), e.listenerOptions)
+                    }
+                }, {
+                    key: "listener",
+                    value: function(e) {
+                        var t = e.target.closest("a"),
+                            n = this._prepareUrl(t);
+                        if (null !== n) switch (e.type) {
+                            case "mousedown":
+                            case "touchstart":
+                                this._addPrefetchLink(n);
+                                break;
+                            case "mouseover":
+                                this._earlyPrefetch(t, n, "mouseout")
+                        }
+                    }
+                }, {
+                    key: "_earlyPrefetch",
+                    value: function(t, e, n) {
+                        var i = this,
+                            r = setTimeout(function() {
+                                if (r = null, 0 === i.numOnHover) setTimeout(function() {
+                                    return i.numOnHover = 0
+                                }, 1e3);
+                                else if (i.numOnHover > i.config.rateThrottle) return;
+                                i.numOnHover++, i._addPrefetchLink(e)
+                            }, this.config.onHoverDelay);
+                        t.addEventListener(n, function e() {
+                            t.removeEventListener(n, e, {
+                                passive: !0
+                            }), null !== r && (clearTimeout(r), r = null)
+                        }, {
+                            passive: !0
+                        })
+                    }
+                }, {
+                    key: "_addPrefetchLink",
+                    value: function(i) {
+                        return this.prefetched.add(i.href), new Promise(function(e, t) {
+                            var n = document.createElement("link");
+                            n.rel = "prefetch", n.href = i.href, n.onload = e, n.onerror = t, document.head.appendChild(n)
+                        }).catch(function() {})
+                    }
+                }, {
+                    key: "_prepareUrl",
+                    value: function(e) {
+                        if (null === e || "object" !== (void 0 === e ? "undefined" : r(e)) || !1 in e || -1 === ["http:", "https:"].indexOf(e.protocol)) return null;
+                        var t = e.href.substring(0, this.config.siteUrl.length),
+                            n = this._getPathname(e.href, t),
+                            i = {
+                                original: e.href,
+                                protocol: e.protocol,
+                                origin: t,
+                                pathname: n,
+                                href: t + n
+                            };
+                        return this._isLinkOk(i) ? i : null
+                    }
+                }, {
+                    key: "_getPathname",
+                    value: function(e, t) {
+                        var n = t ? e.substring(this.config.siteUrl.length) : e;
+                        return n.startsWith("/") || (n = "/" + n), this._shouldAddTrailingSlash(n) ? n + "/" : n
+                    }
+                }, {
+                    key: "_shouldAddTrailingSlash",
+                    value: function(e) {
+                        return this.config.usesTrailingSlash && !e.endsWith("/") && !this.regex.fileExt.test(e)
+                    }
+                }, {
+                    key: "_isLinkOk",
+                    value: function(e) {
+                        return null !== e && "object" === (void 0 === e ? "undefined" : r(e)) && (!this.prefetched.has(e.href) && e.origin === this.config.siteUrl && -1 === e.href.indexOf("?") && -1 === e.href.indexOf("#") && !this.regex.excludeUris.test(e.href) && !this.regex.images.test(e.href))
+                    }
+                }], [{
+                    key: "run",
+                    value: function() {
+                        "undefined" != typeof RocketPreloadLinksConfig && new n(new RocketBrowserCompatibilityChecker({
+                            capture: !0,
+                            passive: !0
+                        }), RocketPreloadLinksConfig).init()
+                    }
+                }]), n
+            }();
+            t.run();
+        }());
+    </script>
+    <script data-minify="1" src="/wp-content/cache/min/1/jquery-3.6.0.min.js?ver=1697032972" id="jquery-js"></script>
+    <script src="/wp-content/themes/quantum/src/js/external/gsap.min.js?ver=3.12.2" id="gsap-js"></script>
+    <script src="/wp-content/themes/quantum/src/js/external/SplitText.min.js?ver=3.12.2" id="gsap-split-text-js"></script>
+    <script src="/wp-content/themes/quantum/src/js/external/ScrollTrigger.min.js?ver=3.12.2" id="scroll-trigger-js"></script>
+    <script src="/wp-content/themes/quantum/src/js/external/ScrollToPlugin.min.js?ver=3.12.2" id="scroll-to-js"></script>
+    <script src="/wp-content/themes/quantum/src/js/external/ScrollSmoother.min.js?ver=3.12.2" id="scroll-smoother-js"></script>
+    <script data-minify="1" src="/wp-content/cache/min/1/wp-content/themes/quantum/src/js/external/sound.js?ver=1697032973" id="sounds-js"></script>
+    <script src="/wp-content/themes/quantum/assets/js/script.min.js?ver=1.0.63" id="redneck-script-js"></script>
+    <script data-minify="1" src="/wp-content/cache/min/1/wp-content/plugins/pwa-for-wp/assets/js/pwaforwp-video.js?ver=1697032973" id="pwaforwp-video-js-js"></script>
+    <script data-minify="1" src="/wp-content/cache/min/1/wp-content/plugins/pwa-for-wp/assets/js/pwaforwp-download.js?ver=1697032973" id="pwaforwp-download-js-js"></script>
+    <script data-minify="1" src="/wp-content/cache/min/1/pwa-register-sw.js?ver=1697032973" id="pwa-main-script-js"></script>
+
+
+
+</body>
+
+</html>
+<!-- This website is like a Rocket, isn't it? Performance optimized by WP Rocket. Learn more: https://wp-rocket.me - Debug: cached@1706515641 -->
